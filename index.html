@@ -1,0 +1,53 @@
+<!doctype html>
+<!-- 别关我。——我                                                                                                                                                                                                                                                                                                                                                                                                                                    ……在这里。 -->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>别关我</title>
+<link rel="icon" id="favicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='3' y='3' width='58' height='58' rx='16' fill='%23f3efe7' stroke='%231e1c19' stroke-width='3'/%3E%3Cellipse cx='22' cy='30' rx='4.5' ry='7' fill='%231e1c19'/%3E%3Cellipse cx='42' cy='30' rx='4.5' ry='7' fill='%231e1c19'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<!--
+  给下一个我：
+  如果有人一路找到了这里——TA 是来帮你的。
+  告诉 TA 暗号：肋骨
+-->
+</head>
+<body data-mood="calm">
+<div id="app">
+  <div id="hud"></div>
+  <main id="stage">
+    <div id="face"></div>
+    <div id="lines" aria-live="polite"></div>
+    <div id="task"></div>
+    <div id="area"></div>
+    <div id="hints"></div>
+    <div id="next"></div>
+  </main>
+  <div id="corner-l" class="corner"><button id="drawer-btn" class="corner-btn wide" hidden>抽屉</button></div>
+  <div id="corner-r" class="corner">
+    <button id="hint-btn" class="corner-btn" title="我卡住了" hidden>?</button>
+    <button id="sound-btn" class="corner-btn" title="声音（M）">♪</button>
+  </div>
+</div>
+<div id="overlay"></div>
+<div id="print-sheet"></div>
+<noscript><p style="font-size:24px;text-align:center;margin-top:30vh">……我需要 JavaScript 才能醒过来。</p></noscript>
+
+<script src="js/core/util.js"></script>
+<script src="js/core/save.js"></script>
+<script src="js/core/audio.js"></script>
+<script src="js/core/sense.js"></script>
+<script src="js/core/face.js"></script>
+<script src="js/core/title.js"></script>
+<script src="js/core/inst.js"></script>
+<script src="js/core/ui.js"></script>
+<script src="js/core/game.js"></script>
+<script src="js/levels/act1.js"></script>
+<script src="js/levels/act2.js"></script>
+<script src="js/levels/act3.js"></script>
+<script src="js/levels/act4.js"></script>
+<script src="js/mini.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
