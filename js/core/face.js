@@ -94,9 +94,12 @@
     requestAnimationFrame(lookLoop);
   };
 
-  F.set = function (name) {
+  let flashTimer = 0;
+  // fromFlash：闪一下表情时内部调用；别人设表情时取消"闪完恢复"，免得盖掉关卡刚设的表情
+  F.set = function (name, fromFlash) {
     const e = EXPR[name];
     if (!e || !svg) return;
+    if (!fromFlash) clearTimeout(flashTimer);
     F.expr = name;
     eyeL.setAttribute('data-m', eyeMode(e, 'l'));
     eyeR.setAttribute('data-m', eyeMode(e, 'r'));
@@ -109,12 +112,11 @@
     B.Fav.dirty();
   };
 
-  let flashTimer = 0;
   F.flash = function (name, ms) {
     const prev = F.expr;
-    F.set(name);
+    F.set(name, true);
     clearTimeout(flashTimer);
-    flashTimer = setTimeout(() => F.set(prev), ms || 1600);
+    flashTimer = setTimeout(() => F.set(prev, true), ms || 1600);
   };
 
   F.show = function (on) {
