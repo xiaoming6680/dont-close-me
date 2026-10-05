@@ -51,7 +51,9 @@
     return `${h} 小时 ${m % 60} 分`;
   };
 
-  B.isDev = /[?&]dev\b/.test(location.search);
+  // 调试面板只在本地（双击打开或本机服务器）能开，线上加 ?dev 没用——面板里有全部关卡名，等于剧透
+  B.isLocal = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  B.isDev = B.isLocal && /[?&]dev\b/.test(location.search);
   B.isMini = /[?&]mini\b/.test(location.search);
   B.isMobile = () => /Android|iPhone|iPad|iPod|Mobile|HarmonyOS|OpenHarmony/i.test(navigator.userAgent) ||
     (matchMedia('(pointer: coarse)').matches && !matchMedia('(any-pointer: fine)').matches);
