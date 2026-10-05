@@ -1,18 +1,9 @@
-// Cloudflare 部署配置（新版 Pages = Workers 静态资源）。
-// 只上传 dist/（先跑 python tools/dist.py）：docs/ 是完整剧透、tests/ 是测试、规划文件是工作记录，都不能上线。
+// Cloudflare Pages 配置。项目 dont-close-me 连着 GitHub：推送 main 后构建环境跑
+// `python3 tools/dist.py`，只发布 dist/（docs/ 是完整剧透、tests/ 是测试，都不能上线）。
+// 写成 Pages 配置的另一个作用：在这里误跑 `wrangler deploy`（Workers 命令）会直接报错，
+// 不会再像第一次部署那样把整个目录（含剧透）传上去。
 {
   "name": "dont-close-me",
-  "compatibility_date": "2026-10-01",
-  "assets": {
-    "directory": "./dist"
-  },
-  // 线上地址：https://stay.xiaoming6680.link（xiaoming6680.link 在同一个 Cloudflare 账号里，DNS 和证书自动配）
-  "routes": [{ "pattern": "stay.xiaoming6680.link", "custom_domain": true }],
-  // 只用正式域名，不开 workers.dev 和预览地址
-  "workers_dev": false,
-  "preview_urls": false,
-  // 不开请求日志：游戏承诺不收集任何数据
-  "observability": {
-    "enabled": false
-  }
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-10-01"
 }
