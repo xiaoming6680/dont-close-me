@@ -147,6 +147,7 @@ button { font-family: inherit; }
 .hint::before { content: "（小声）"; font-style: normal; opacity: .7; }
 .skip-link { margin-top: 6px; font-size: 13px; color: var(--dim); background: none; border: none; text-decoration: underline; cursor: pointer; }
 #next { margin-top: 30px; min-height: 48px; }
+#next:empty, #hints:empty { min-height: 0; margin-top: 0; } /* 空着的时候不占地方，矮窗口里少一截滚动 */
 @keyframes fadein { from { opacity: 0; transform: translateY(4px); } }
 
 /* ───── 按钮和输入 ───── */
@@ -376,6 +377,9 @@ body.mini .line.old { display: none; }
   .dims { font-size: 30px; }
   .slot { flex-direction: column; align-items: center; gap: 4px; }
   .slot .where { text-align: center; min-width: 0; }
+}
+@media (max-height: 720px) {
+  #stage { padding-bottom: 56px; } /* 笔记本常见的矮窗口：别为了底部留白多出一根滚动条 */
 }
 @media (max-height: 560px) {
   #stage { padding-top: 36px; }
