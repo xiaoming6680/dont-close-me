@@ -266,8 +266,8 @@
       const num = el('div', { class: 'count' });
       heart.hidden = true;
       ctx.area.append(heart, num);
-      const canLock = 'requestPointerLock' in document.body;
-      let t0 = 0, held = false, hx = 0, hy = 0, lastBeat = 0;
+      let holdMode = !('requestPointerLock' in document.body);
+      let t0 = 0, held = false, hx = 0, hy = 0, lastBeat = 0, fails = 0;
       const begin = () => { t0 = Date.now(); held = true; btn.hidden = true; heart.hidden = false; B.Face.set('tender'); };
       const letGo = () => {
         if (!held) return;
@@ -275,21 +275,27 @@
         if (t0 && Date.now() - t0 < 10000) ctx.react('……没关系。', { face: 'sad' });
         t0 = 0;
       };
+      // 指针锁定连续两次失败（有的环境不给锁），就改成"按住鼠标别松开"，保证这关一定能过
+      const toHold = () => { holdMode = true; btn.textContent = '按住别松开'; };
+      const failed = () => {
+        if (++fails >= 2) { toHold(); ctx.react('……那换个办法：按住我，别松开。', { face: 'shy' }); }
+        else ctx.react('……手滑了。再试一次？', { face: 'think' });
+      };
       await ctx.until(done => {
-        if (canLock) {
-          ctx.on(btn, 'click', () => {
-            try {
-              const r = document.body.requestPointerLock();
-              if (r && r.catch) r.catch(() => ctx.react('……手滑了。等一下再试试？', { face: 'think' }));
-            } catch (e) { ctx.react('……手滑了。等一下再试试？', { face: 'think' }); }
-          });
-          ctx.on(document, 'pointerlockchange', () => { if (document.pointerLockElement) begin(); else letGo(); });
-          ctx.cleanup(() => { if (document.pointerLockElement) document.exitPointerLock(); });
-        } else {
-          btn.textContent = '按住别松开';
-          ctx.on(btn, 'pointerdown', begin);
-          ctx.on(document, 'pointerup', letGo);
-        }
+        ctx.on(btn, 'click', () => {
+          if (holdMode) return;
+          try {
+            const r = document.body.requestPointerLock();
+            if (r && r.catch) r.catch(failed);
+            else ctx.after(1500, () => { if (!document.pointerLockElement && !held) failed(); });
+          } catch (e) { failed(); }
+        });
+        ctx.on(document, 'pointerlockchange', () => { if (holdMode) return; if (document.pointerLockElement) begin(); else letGo(); });
+        ctx.on(document, 'pointerlockerror', failed);
+        ctx.cleanup(() => { if (document.pointerLockElement) document.exitPointerLock(); });
+        ctx.on(btn, 'pointerdown', () => { if (holdMode) begin(); });
+        ctx.on(document, 'pointerup', () => { if (holdMode) letGo(); });
+        if (holdMode) toHold();
         ctx.on(document, 'mousemove', e => {
           if (!held || !document.pointerLockElement) return;
           hx = B.clamp(hx + e.movementX * 0.3, -60, 60); hy = B.clamp(hy + e.movementY * 0.3, -30, 30);

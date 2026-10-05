@@ -444,8 +444,18 @@ async def L_pointer_lock(S):
     locked = await wait_for(p, '!!document.pointerLockElement', 3)
     how = 'real(pointer lock)'
     if not locked:
-        how = 'simulated(no pointer lock in automation)'
-        await p.evaluate("document.dispatchEvent(new Event('pointerlockchange'))")
+        # 拿不到锁定（自动化窗口没有系统焦点时会这样）→ 再点一次，触发游戏里的"按住别松开"兜底
+        await asyncio.sleep(1.6)
+        await p.click('#area .btn.primary')
+        locked = await wait_for(p, '!!document.pointerLockElement', 3)
+        if not locked:
+            await wait_for(p, "document.querySelector('#area .btn.primary').textContent.includes('按住')", 5)
+            box = await p.locator('#area .btn.primary').bounding_box()
+            await p.mouse.move(box['x'] + box['width'] / 2, box['y'] + box['height'] / 2)
+            await p.mouse.down()
+            await asyncio.sleep(11)
+            await p.mouse.up()
+            how = 'real(fallback: hold mouse 10s)'
     ok = await wait_solved(p, 14)
     AUTO['on'] = True
     return ok, how
