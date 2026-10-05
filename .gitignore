@@ -14,3 +14,10 @@ Thumbs.db
 # 测试输出
 tests/out/
 __pycache__/
+
+# wrangler 本地缓存和密钥文件
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
